@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function Anime() {
+export default function Anime(props) {
     return (
         <div>
-            Each Anime
+            {props.anime.title.romaji}
         </div>
     )
 }
