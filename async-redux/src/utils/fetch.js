@@ -1,6 +1,6 @@
 // Here we define our query as a multi-line string
 // Storing it in a separate .graphql/.gql file is also possible
-var query = `
+const query = `
 query ($id: Int, $page: Int, $perPage: Int, $search: String) {
   Page (page: $page, perPage: $perPage) {
     pageInfo {
@@ -21,15 +21,19 @@ query ($id: Int, $page: Int, $perPage: Int, $search: String) {
 `;
 
 // Define our query variables and values that will be used in the query request
-var variables = {
-  search: "Fate/Zero",
-  page: 1,
-  perPage: 10
+const variables = searchString => {
+  return {
+    search: searchString,
+    page: 1,
+    perPage: 10
+  };
 };
 
 // Define the config we'll need for our Api request
-var url = "https://graphql.anilist.co",
-  options = {
+const url = "https://graphql.anilist.co";
+
+const options = searchString => {
+  return {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -37,30 +41,14 @@ var url = "https://graphql.anilist.co",
     },
     body: JSON.stringify({
       query: query,
-      variables: variables
+      variables: variables(searchString)
     })
   };
+};
 
 // Make the HTTP Api request
-function fetchAnime() {
-  fetch(url, options)
-    .then(handleResponse)
-    .then(handleData)
-    .catch(handleError);
-}
-function handleResponse(response) {
-  return response.json().then(function(json) {
-    return response.ok ? json : Promise.reject(json);
-  });
-}
-
-function handleData(data) {
-  console.log(data);
-}
-
-function handleError(error) {
-  alert("Error, check console");
-  console.error(error);
+function fetchAnime(searchString) {
+  return fetch(url, options(searchString))
 }
 
 export default fetchAnime;
