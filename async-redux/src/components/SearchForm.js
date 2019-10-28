@@ -4,8 +4,17 @@ import { connect } from "react-redux";
 import { handleChange, handleSubmit } from "../actions";
 
 function Search(props) {
+  React.useEffect(() => {
+    props.handleSubmit(props.searchString);
+  }, []);
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    props.handleSubmit(props.searchString);
+  };
+
   return (
-    <form onSubmit={() => props.handleSubmit(props.searchString)}>
+    <form onSubmit={handleSubmit}>
       <label>
         Search your favorite Anime!
         <input
@@ -15,7 +24,7 @@ function Search(props) {
           onChange={e => props.handleChange(e.target.value)}
         />
       </label>
-      <button type="submit" disabled={props.start}>
+      <button type="submit" disabled={props.isLoading}>
         Submit
       </button>
     </form>
@@ -25,9 +34,8 @@ function Search(props) {
 const mapStateToProps = state => {
   return {
     searchString: state.formReducer.searchString,
-    start: state.animeReducer.start,
-    success: state.animeReducer.success,
-    error: state.animeReducer.error
+    isLoading: state.animeReducer.isLoading
+    // error: state.animeReducer.error
   };
 };
 
